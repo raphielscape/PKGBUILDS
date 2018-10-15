@@ -9,7 +9,7 @@ pkgver=2.10.0
 pkgrel=3
 pkgdesc='Daemon that performs monitoring and adaptive configuration of devices in the system'
 arch=('any')
-url="https://github.com/redhat-performance/tuned}"
+url="https://github.com/redhat-performance/tuned"
 license=('GPL')
 depends=('ethtool' 'python-configobj' 'python-pyudev' 'python-gobject2' 'python-decorator' 'python-dbus' 
 'python-gobject' 'python-linux-procfs' 'dbus-glib')
@@ -21,7 +21,7 @@ source=("https://github.com/redhat-performance/tuned/archive/master.zip")
 sha256sums=('3b675a33e3d11563db49ee49ca16e1b918d11e81908fe50413e8d86d6acfe56f')
 
 prepare() {
-  unzip -u master.zip
+  	unzip -u master.zip
 }
 
 package() {
@@ -33,6 +33,7 @@ package() {
 	mv "${pkgdir}"/usr/libexec/tuned/* "${pkgdir}"/usr/lib/tuned/
 	rm -r "${pkgdir}"/run "${pkgdir}"/usr/sbin "${pkgdir}"/usr/libexec
 
+	# Arch Linux doesn't have python2.3, change it to python2 instead to use python2.7
 	find "${pkgdir}"/usr/bin/ -type f -exec sed -i 's@#!/usr/bin/python23@#!/usr/bin/python2@' {} \;
 
 	install -Dm644 "${srcdir}/tuned-master/tuned.service" "${pkgdir}/usr/lib/systemd/system/tuned.service"
