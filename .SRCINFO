@@ -18,6 +18,7 @@ pkgbase = tuned-git
 	depends = dbus-glib
 	optdepends = virt-what: For use with virtual machines
 	optdepends = systemtap: Disk and net statistic monitoring systemtap scripts
+	optdepends = python-dmidecode: DMI Decoding stuff
 	backup = etc/tuned/active_profile
 	source = https://github.com/redhat-performance/tuned/archive/master.zip
 	sha256sums = 3b675a33e3d11563db49ee49ca16e1b918d11e81908fe50413e8d86d6acfe56f

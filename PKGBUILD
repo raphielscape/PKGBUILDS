@@ -13,7 +13,7 @@ url="https://github.com/redhat-performance/tuned"
 license=('GPL')
 depends=('ethtool' 'python-configobj' 'python-pyudev' 'python-gobject2' 'python-decorator' 'python-dbus' 
 'python-gobject' 'python-linux-procfs' 'dbus-glib')
-optdepends=('virt-what: For use with virtual machines' 'systemtap: Disk and net statistic monitoring systemtap scripts')
+optdepends=('virt-what: For use with virtual machines' 'systemtap: Disk and net statistic monitoring systemtap scripts' 'python-dmidecode: DMI Decoding stuff')
 makedepends=('desktop-file-utils')
 backup=('etc/tuned/active_profile')
 install="tuned-git.install"
