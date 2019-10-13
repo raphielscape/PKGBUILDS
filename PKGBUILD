@@ -1,12 +1,13 @@
-# Maintainer: Ricardo Liang (rliang) <ricardoliang@gmail.com>
+# Maintainer: Raphiel Rollerscaperers <raphielscape@raphielgang.org>
+# Contributor: Ricardo Liang (rliang) <ricardoliang@gmail.com>
 
 _pkgname=gnome-shell
 pkgname="$_pkgname"-git
-pkgver=3.31.2+40+g3989cad3d
+pkgver=3.35.1
 pkgrel=1
 epoch=1
 pkgdesc="Next generation desktop shell"
-url="https://wiki.gnome.org/Projects/GnomeShell"
+url="https://gitlab.gnome.org/GNOME/gnome-shell"
 arch=(x86_64)
 license=(GPL2)
 provides=(gnome-shell)
@@ -15,7 +16,7 @@ depends=(accountsservice gcr gjs gnome-bluetooth upower gnome-session gnome-sett
          gnome-themes-extra gsettings-desktop-schemas libcanberra-pulse libcroco libgdm libsecret
          mutter-git nm-connection-editor unzip gstreamer libibus)
 makedepends=(gtk-doc gnome-control-center evolution-data-server gobject-introspection git meson
-             sassc)
+             sassc asciidoc)
 optdepends=('gnome-control-center: System settings'
             'evolution-data-server: Evolution calendar integration')
 groups=(gnome)
@@ -39,9 +40,19 @@ prepare() {
   git config --local submodule.subprojects/gvc.url "$srcdir/libgnome-volume-control"
   git submodule update
 }
-  
+
 build() {
-  arch-meson $_pkgname build -D gtk_doc=true
+  CFLAGS+=" -O3 -falign-functions=32 -flto=thin \
+            -fno-math-errno -fno-trapping-math \
+            -fstack-protector-strong"
+
+  CXXFLAGS+=" -O3 -falign-functions=32 -flto=thin \
+            -fno-math-errno -fno-trapping-math \
+            -fstack-protector-strong"
+
+  LDFLAGS+=" -flto=thin"
+
+  arch-meson $_pkgname build -D gtk_doc=true -Dnetworkmanager=true -Dsystemd=true
   ninja -C build
 }
 
