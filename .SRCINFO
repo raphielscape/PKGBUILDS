@@ -1,12 +1,12 @@
 pkgbase = mutter-git
 	pkgdesc = A window manager for GNOME
-	pkgver = 3.31.2+194+gfb38738fe
+	pkgver = 3.35.1
 	pkgrel = 1
 	url = https://gitlab.gnome.org/GNOME/mutter
 	arch = x86_64
 	groups = gnome
 	license = GPL
-	makedepends = gtk-doc
+	makedepends = intltool
 	makedepends = gobject-introspection
 	makedepends = git
 	makedepends = egl-wayland
@@ -29,7 +29,9 @@ pkgbase = mutter-git
 	conflicts = mutter
 	conflicts = mutter-dev
 	source = git+https://gitlab.gnome.org/GNOME/mutter.git
+	source = 0001-meta-profiler-Fix-compilation.patch
 	sha256sums = SKIP
+	sha256sums = 5bbad5c7a34dd2a575361a9b1f4622bf26771ef2aa09b6aa117750336d809001
 
 pkgname = mutter-git
 

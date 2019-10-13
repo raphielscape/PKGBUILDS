@@ -1,0 +1,38 @@
+From 38a643cc233e4afb1ca64fbf2a97bbbd51722738 Mon Sep 17 00:00:00 2001
+From: Raphiel Rollerscaperers <rapherion@raphielgang.org>
+Date: Sun, 13 Oct 2019 18:36:20 +0700
+Subject: [PATCH] meta-profiler: Fix compilation
+
+Signed-off-by: Raphiel Rollerscaperers <rapherion@raphielgang.org>
+---
+ src/backends/meta-profiler.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/src/backends/meta-profiler.c b/src/backends/meta-profiler.c
+index 10d433afa..1de61fdae 100644
+--- a/src/backends/meta-profiler.c
++++ b/src/backends/meta-profiler.c
+@@ -73,11 +73,6 @@ handle_start (MetaDBusSysprof3Profiler *dbus_profiler,
+
+   g_variant_get (fd_variant, "h", &position);
+
+-  message = g_dbus_method_invocation_get_message (invocation);
+-  fd_list = g_dbus_message_get_unix_fd_list (message);
+-  if (fd_list)
+-    fd = g_unix_fd_list_get (fd_list, position, NULL);
+-
+   /* Translators: this string will appear in Sysprof */
+   group_name = _("Compositor");
+
+@@ -98,7 +93,7 @@ handle_start (MetaDBusSysprof3Profiler *dbus_profiler,
+
+   g_debug ("Profiler running");
+
+-  meta_dbus_sysprof3_profiler_complete_start (dbus_profiler, invocation);
++  meta_dbus_sysprof3_profiler_complete_start (dbus_profiler, invocation, NULL);
+   return TRUE;
+ }
+
+--
+2.23.0
+
