@@ -1,0 +1,25 @@
+pkgbase = gjs-git
+	pkgdesc = Javascript Bindings for GNOME
+	pkgver = 1.63.1+1+g466678d9
+	pkgrel = 1
+	epoch = 2
+	url = https://wiki.gnome.org/Projects/Gjs
+	arch = x86_64
+	license = GPL
+	checkdepends = valgrind
+	checkdepends = xorg-server-xvfb
+	makedepends = gobject-introspection
+	makedepends = git
+	makedepends = autoconf-archive
+	makedepends = sysprof
+	depends = cairo
+	depends = gobject-introspection-runtime
+	depends = js60
+	depends = dconf
+	provides = gjs=1.63.1+1+g466678d9
+	conflicts = gjs
+	source = git+https://gitlab.gnome.org/GNOME/gjs.git
+	sha256sums = SKIP
+
+pkgname = gjs-git
+
