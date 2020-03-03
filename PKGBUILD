@@ -12,8 +12,8 @@ arch=(x86_64)
 license=(GPL2)
 provides=(gnome-shell)
 conflicts=(gnome-shell gnome-shell-dev)
-depends=(accountsservice gcr gjs-git js68 gnome-bluetooth upower gnome-session gnome-settings-daemon sysprof-git
-         gnome-themes-extra gsettings-desktop-schemas libcanberra-pulse libcroco libgdm libsecret
+depends=(accountsservice gcr gjs-git js68 gnome-bluetooth upower gnome-session-git gnome-settings-daemon sysprof-git
+         gnome-themes-extra gsettings-desktop-schemas-git libcanberra-pulse libcroco libgdm libsecret
          mutter-git nm-connection-editor unzip gstreamer libibus)
 makedepends=(gtk-doc gnome-control-center evolution-data-server gobject-introspection git meson
              sassc asciidoc)
