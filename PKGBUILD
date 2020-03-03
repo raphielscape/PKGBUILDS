@@ -3,7 +3,7 @@
 
 _pkgname=gnome-shell
 pkgname="$_pkgname"-git
-pkgver=3.35.1
+pkgver=3.35.92+5+g5e04f6eb2
 pkgrel=1
 epoch=1
 pkgdesc="Next generation desktop shell"
@@ -12,7 +12,7 @@ arch=(x86_64)
 license=(GPL2)
 provides=(gnome-shell)
 conflicts=(gnome-shell gnome-shell-dev)
-depends=(accountsservice gcr gjs gnome-bluetooth upower gnome-session gnome-settings-daemon
+depends=(accountsservice gcr gjs-git js68 gnome-bluetooth upower gnome-session gnome-settings-daemon sysprof-git
          gnome-themes-extra gsettings-desktop-schemas libcanberra-pulse libcroco libgdm libsecret
          mutter-git nm-connection-editor unzip gstreamer libibus)
 makedepends=(gtk-doc gnome-control-center evolution-data-server gobject-introspection git meson
@@ -21,8 +21,10 @@ optdepends=('gnome-control-center: System settings'
             'evolution-data-server: Evolution calendar integration')
 groups=(gnome)
 source=("git+https://gitlab.gnome.org/GNOME/gnome-shell.git"
+        "clearlinux::git+https://github.com/clearlinux-pkgs/gnome-shell.git"
         "git+https://gitlab.gnome.org/GNOME/libgnome-volume-control.git")
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP')
 
 pkgver() {
@@ -32,6 +34,12 @@ pkgver() {
 
 prepare() {
   cd $_pkgname
+
+  # Add Clearlinux patches add-multilib-config.patch
+  for i in $(grep '^Patch' ${srcdir}/clearlinux/gnome-shell.spec | sed -n 's/.*: //p'); do
+    msg2 "Applying patch ${i}..."
+    patch -Np1 -i "$srcdir/clearlinux/${i}"
+  done
 
   # Move the plugin to our custom epiphany-only dir
   sed -i "s/'mozilla'/'epiphany'/g" meson.build
@@ -44,21 +52,18 @@ prepare() {
 build() {
   CFLAGS+=" -O3 -falign-functions=32 -flto=thin \
             -fno-math-errno -fno-trapping-math \
-            -fstack-protector-strong"
+            -fstack-protector-strong -funroll-loops"
 
   CXXFLAGS+=" -O3 -falign-functions=32 -flto=thin \
             -fno-math-errno -fno-trapping-math \
-            -fstack-protector-strong"
+            -fstack-protector-strong -funroll-loops"
 
   LDFLAGS+=" -flto=thin"
 
-  arch-meson $_pkgname build -D gtk_doc=true -Dnetworkmanager=true -Dsystemd=true
+  arch-meson "$_pkgname" build -D gtk_doc=true
   ninja -C build
 }
 
 package() {
   DESTDIR="$pkgdir" meson install -C build
-
-  # https://bugs.archlinux.org/task/37412
-  mkdir "$pkgdir/usr/share/gnome-shell/modes"
 }
