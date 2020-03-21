@@ -7,18 +7,18 @@
 # https://github.com/mymedia2/tdesktop
 
 pkgname=telegram-desktop-git
-pkgver=1.9.19.r9.g4e345ac68
+pkgver=1.9.21.r2.gd2291f5b1
 pkgrel=1
 pkgdesc='Official Telegram Desktop client - development branch'
 arch=(x86_64)
 options=(!buildflags)
 url="https://desktop.telegram.org/"
 license=('GPL3')
-depends=( 'enchant' 'ffmpeg' 'hicolor-icon-theme' 'lz4'
-          'minizip' 'openal' 'qt5-imageformats' 'xxhash'
+depends=( 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip'
+          'openal' 'qt5-imageformats' 'xxhash'
 )
 makedepends=('cmake' 'git' 'microsoft-gsl' 'libdbusmenu-qt5'
-             'ninja' 'python' 'quilt' 'range-v3'
+             'ninja' 'python' 'range-v3' 'tl-expected'
 )
 optdepends=(
     'ttf-opensans: default Open Sans font family'
@@ -38,8 +38,7 @@ source=(
     "xxHash::git+https://github.com/Cyan4973/xxHash.git"
     # These files might require modifications to be up-to-date. If that is the
     # case, they will be updated in place and untracked temporarily.
-    "0005-Use-system-wide-fonts.patch"
-    "series"
+    # "0005-Use-system-wide-fonts.patch"
 )
 sha512sums=('SKIP'
             'SKIP'
@@ -48,9 +47,7 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            'd0327d992d939a72dcfd3b35ac84931c08b67e189978cd65cb9a6cd4dc868334c9a13c773cba7882f429ce62c2631d1c70e0600d04e24353ebb76feb09084f65'
-            'd66adb920b318520146cf7a29f13e28e16c0cfb28f4d27ef743a8d7acea4b45b5c62e7dfc3928ec23a97b12dd42845f311aaa7c317df632f7926bdd5bfb8f2b3')
+            'SKIP')
 
 pkgver() {
     cd "$srcdir/tdesktop"
@@ -69,12 +66,12 @@ prepare() {
     git config submodule.Telegram/ThirdParty/xxHash.url "$srcdir/xxHash"
     git submodule update
 
-    QUILT_PATCHES=.. quilt --quiltrc=/dev/null push -a
+    # patch -Np1 ../0005-Use-system-wide-fonts.patch
 }
 
 build() {
     cd "$srcdir/tdesktop"
-    mkdir build
+    mkdir -p build
     export CXXFLAGS="$CXXFLAGS -march=native -mtune=native \
                     -pipe -fno-plt -fasynchronous-unwind-tables \
                     -fno-omit-frame-pointer -Wp,-D_REENTRANT \
@@ -87,16 +84,16 @@ build() {
         -DDESKTOP_APP_USE_GLIBC_WRAPS=OFF \
         -DDESKTOP_APP_USE_PACKAGED=ON \
         -DDESKTOP_APP_USE_PACKAGED_FONTS=ON \
-        -DDESKTOP_APP_USE_PACKAGED_RLOTTIE=OFF \
         -DTDESKTOP_USE_PACKAGED_TGVOIP=OFF \
-        -DDESKTOP_APP_USE_PACKAGED_EXPECTED=OFF \
+        -DDESKTOP_APP_USE_PACKAGED_RLOTTIE=OFF \
         -DDESKTOP_APP_USE_PACKAGED_VARIANT=OFF \
+        -DDESKTOP_APP_USE_PACKAGED_EXPECTED=ON \
         -DDESKTOP_APP_DISABLE_CRASH_REPORTS=ON \
-        -DTDESKTOP_DISABLE_AUTOUPDATE=ON \
         -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON \
-        -DTDESKTOP_DISABLE_DESKTOP_FILE_GENERATION=ON \
+        -DDESKTOP_APP_DISABLE_SPELLCHECK=ON \
+        -DTDESKTOP_FORCE_GTK_FILE_DIALOG=ON \
         -DDESKTOP_APP_SPECIAL_TARGET=""
-    ninja -C build
+    ninja -j6 -C build
 }
 
 package() {
@@ -108,7 +105,7 @@ package() {
     install -m644 "lib/xdg/telegramdesktop.desktop" "$pkgdir/usr/share/applications/telegramdesktop.desktop"
 
     install -d "$pkgdir/usr/share/metainfo/"
-    install -m644 "lib/xdg/telegramdesktop.appdata.xml" "$pkgdir/usr/share/metainfo/telegramdesktop.appdata.xml"
+    install -m644 "lib/xdg/telegramdesktop.appdata.xml.in" "$pkgdir/usr/share/metainfo/telegramdesktop.appdata.xml.in"
 
     local icon_size icon_dir
     for icon_size in 16 32 48 64 128 256 512; do
