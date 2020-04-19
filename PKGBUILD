@@ -1,36 +1,45 @@
-# Maintainer: Jianqiu Zhang <void001@archlinuxcn.org>
-
+# Maintainer: Raphiel Rollerscaperers <rapherion@raphielgang.org>
+# Contributor: Jianqiu Zhang <void001@archlinuxcn.org>
 
 pkgname=oomd-git
-pkgver=20190207
+_pkgname=oomd
+pkgver=v0.3.2+12+g51553b5
 pkgrel=1
 pkgdesc='A userspace out-of-memory killer'
 arch=('x86_64')
 url="https://github.com/facebookincubator/oomd"
 license=('GPL2')
 depends=('jsoncpp')
-makedepends=('meson' 'ninja' 'git' 'jsoncpp')
+optdepends=('systemd-libs')
+makedepends=('meson' 'ninja')
+checkdepends=('gtest' 'gmock')
+backup=("etc/${_pkgname}/${_pkgname}.json")
+install="${_pkgname}.install"
 md5sums=('SKIP')
 
 source=(
     "oomd::git+https://github.com/facebookincubator/oomd.git"
 )
 
-
-prepare() {
-    echo "Prepare do nothing"
-#    cp fix-meson-no-install.patch $srcdir/oomd/
-#    cd $srcdir/oomd/
-#    patch -p1 < fix-meson-no-install.patch
+pkgver() {
+    cd "$srcdir/$_pkgname"
+    git describe --tags | sed 's/-/+/g'
 }
 
 build() {
-    cd $srcdir/oomd
-    meson --prefix "$pkgdir/usr" build && ninja -C build
+    cd "$srcdir/$_pkgname"
+    meson --prefix "/usr" build && ninja -C build
+}
+
+check() {
+    cd "$srcdir/$_pkgname"
+    ninja test -C build
 }
 
 package() {
-    cd $srcdir/oomd
-    ninja -C build install
-    install -Dm644 $srcdir/oomd/etc/desktop.json $pkgdir/etc/desktop.json.example
+    cd "$srcdir/$_pkgname"
+    DESTDIR="$pkgdir" ninja -C build install
+
+    install -d "$pkgdir/etc/"
+    install -m644 "$srcdir/oomd/src/oomd/etc/desktop.json" "$pkgdir/etc/desktop.json.example"
 }
