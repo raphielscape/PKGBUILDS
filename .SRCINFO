@@ -1,7 +1,7 @@
 pkgbase = tuned-git
 	pkgdesc = Daemon that performs monitoring and adaptive configuration of devices in the system
-	pkgver = 2.10.0
-	pkgrel = 3
+	pkgver = 2.14.0.r27.g845bdc5
+	pkgrel = 1
 	url = https://github.com/redhat-performance/tuned
 	install = tuned-git.install
 	arch = any
@@ -10,7 +10,7 @@ pkgbase = tuned-git
 	depends = ethtool
 	depends = python-configobj
 	depends = python-pyudev
-	depends = python-gobject2
+	depends = python-gobject
 	depends = python-decorator
 	depends = python-dbus
 	depends = python-gobject
@@ -20,8 +20,8 @@ pkgbase = tuned-git
 	optdepends = systemtap: Disk and net statistic monitoring systemtap scripts
 	optdepends = python-dmidecode: DMI Decoding stuff
 	backup = etc/tuned/active_profile
-	source = https://github.com/redhat-performance/tuned/archive/master.zip
-	sha256sums = 3b675a33e3d11563db49ee49ca16e1b918d11e81908fe50413e8d86d6acfe56f
+	source = git+https://github.com/redhat-performance/tuned.git
+	sha256sums = SKIP
 
 pkgname = tuned-git
 
