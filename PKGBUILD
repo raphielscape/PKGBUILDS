@@ -5,27 +5,28 @@
 # Contributor: Tom <reztho at archlinux dot org>
 
 pkgname=tuned-git
-pkgver=2.10.0
-pkgrel=3
+pkgver=2.14.0.r27.g845bdc5
+pkgrel=1
 pkgdesc='Daemon that performs monitoring and adaptive configuration of devices in the system'
 arch=('any')
 url="https://github.com/redhat-performance/tuned"
 license=('GPL')
-depends=('ethtool' 'python-configobj' 'python-pyudev' 'python-gobject2' 'python-decorator' 'python-dbus' 
+depends=('ethtool' 'python-configobj' 'python-pyudev' 'python-gobject' 'python-decorator' 'python-dbus'
 'python-gobject' 'python-linux-procfs' 'dbus-glib')
 optdepends=('virt-what: For use with virtual machines' 'systemtap: Disk and net statistic monitoring systemtap scripts' 'python-dmidecode: DMI Decoding stuff')
 makedepends=('desktop-file-utils')
 backup=('etc/tuned/active_profile')
 install="tuned-git.install"
-source=("https://github.com/redhat-performance/tuned/archive/master.zip")
-sha256sums=('3b675a33e3d11563db49ee49ca16e1b918d11e81908fe50413e8d86d6acfe56f')
+source=("git+https://github.com/redhat-performance/tuned.git")
+sha256sums=('SKIP')
 
-prepare() {
-  	unzip -u master.zip
+pkgver() {
+  cd "tuned"
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 package() {
-	cd "tuned-master"
+	cd "tuned"
 
 	make DESTDIR="${pkgdir}" install
 
@@ -36,5 +37,5 @@ package() {
 	# Arch Linux doesn't have python2.3, change it to python2 instead to use python2.7
 	find "${pkgdir}"/usr/bin/ -type f -exec sed -i 's@#!/usr/bin/python23@#!/usr/bin/python2@' {} \;
 
-	install -Dm644 "${srcdir}/tuned-master/tuned.service" "${pkgdir}/usr/lib/systemd/system/tuned.service"
+	install -Dm644 "${srcdir}/tuned/tuned.service" "${pkgdir}/usr/lib/systemd/system/tuned.service"
 }
